@@ -8,6 +8,7 @@ using System.IO;
 
 namespace Rechtschreibpruefung
 {
+
     public class FileLoader
     {
         public string Path { get; set; }

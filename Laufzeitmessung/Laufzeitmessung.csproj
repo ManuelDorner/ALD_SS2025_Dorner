@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1F78A748-34EF-475F-957A-A1827858F131}</ProjectGuid>
+    <ProjectGuid>{35DDCE32-5B3A-44F7-8911-D2055BF3CCA9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Rechtschreibpruefung</RootNamespace>
-    <AssemblyName>Rechtschreibpruefung</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RootNamespace>Laufzeitmessung</RootNamespace>
+    <AssemblyName>Laufzeitmessung</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -51,13 +50,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ArrayList\ArrayList.csproj">
+      <Project>{843e71df-1daf-4b15-8325-367621222dd8}</Project>
+      <Name>ArrayList</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rechtschreibkontrolle\Rechtschreibkontrolle.csproj">
+      <Project>{858fd156-367a-42dc-a869-4b0498620ac2}</Project>
+      <Name>Rechtschreibkontrolle</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SinglyLinkedList\SinglyLinkedList.csproj">
       <Project>{1b24cbc3-6ba3-4bf0-8869-69e81544044e}</Project>
       <Name>SinglyLinkedList</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SLL_Test\SLL_Test.csproj">
-      <Project>{abe7221b-86dd-4489-8a59-1bc1e7f2ac99}</Project>
-      <Name>SLL_Test</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
