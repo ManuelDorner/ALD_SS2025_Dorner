@@ -19,7 +19,7 @@ namespace ArrayList
         // Anzahl belegter Elemente
         public int Count() => count;
 
-        // Indexer: list[i]
+        // Indexer
         public T this[int index]
         {
             get
@@ -36,17 +36,17 @@ namespace ArrayList
             }
         }
 
-        // Fügt ein Element am Ende hinzu
+        // Hinzufügen am Ende
         public void Add(T item)
         {
             if (count == items.Length)
             {
-                Array.Resize(ref items, items.Length * 2);
+                Resize(items.Length * 2);
             }
             items[count++] = item;
         }
 
-        // Einfügen an bestimmtem Index
+        // Einfügen an einer bestimmten Position
         public void InsertAt(int index, T item)
         {
             if (index < 0 || index > count)
@@ -54,7 +54,7 @@ namespace ArrayList
 
             if (count == items.Length)
             {
-                Array.Resize(ref items, items.Length * 2);
+                Resize(items.Length * 2);
             }
 
             for (int i = count; i > index; i--)
@@ -66,7 +66,7 @@ namespace ArrayList
             count++;
         }
 
-        // Entfernt Element an Index
+        // Entfernt das Element an einer bestimmten Position
         public bool RemoveAt(int index)
         {
             if (index < 0 || index >= count)
@@ -78,11 +78,12 @@ namespace ArrayList
             }
 
             count--;
+
             ShrinkIfNeeded();
             return true;
         }
 
-        // Entfernt erstes passendes Element
+        // Entfernt das erste Vorkommen eines Wertes
         public bool Remove(T item)
         {
             int index = -1;
@@ -102,7 +103,7 @@ namespace ArrayList
             return RemoveAt(index);
         }
 
-        // Gibt true zurück, wenn item enthalten ist
+        // Prüft, ob das Element enthalten ist
         public bool Contains(T item)
         {
             for (int i = 0; i < count; i++)
@@ -113,21 +114,31 @@ namespace ArrayList
             return false;
         }
 
-        // Setzt die Liste zurück
+        // Liste leeren
         public void Clear()
         {
-            items = new T[4];
             count = 0;
+            items = new T[4]; // Rücksetzen auf Startgröße
         }
 
-        // Verkleinert, wenn zur Hälfte leer
+        // Verkleinert das Array, wenn mehr als die Hälfte ungenutzt ist
         private void ShrinkIfNeeded()
         {
             if (count <= items.Length / 2 && items.Length > 4)
             {
-                int newSize = Math.Max(items.Length / 2, 4);
-                Array.Resize(ref items, newSize);
+                Resize(Math.Max(items.Length / 2, 4));
             }
+        }
+
+        // Größe ändern
+        private void Resize(int newSize)
+        {
+            T[] newArray = new T[newSize];
+            for (int i = 0; i < count; i++)
+            {
+                newArray[i] = items[i];
+            }
+            items = newArray;
         }
     }
 }

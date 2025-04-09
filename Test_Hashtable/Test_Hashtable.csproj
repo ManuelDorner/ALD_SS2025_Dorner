@@ -58,6 +58,10 @@
       <Project>{9dbd4279-2376-46c9-a509-01381fc7b31a}</Project>
       <Name>Hashtable</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rechtschreibkontrolle\Rechtschreibkontrolle.csproj">
+      <Project>{858fd156-367a-42dc-a869-4b0498620ac2}</Project>
+      <Name>Rechtschreibkontrolle</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SinglyLinkedList\SinglyLinkedList.csproj">
       <Project>{1b24cbc3-6ba3-4bf0-8869-69e81544044e}</Project>
       <Name>SinglyLinkedList</Name>

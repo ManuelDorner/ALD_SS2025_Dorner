@@ -1,18 +1,14 @@
 ﻿using ArrayList;
 using SinglyLinkedList;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hashtable
 {
     public class Hashtable<K, V>
     {
+        private ArrayList.ArrayList<SinglyLinkedList.SinglyLinkedList<Tuple<K, V>>> m_container;
+        private int counter = 0;
 
-        public ArrayList.ArrayList<SinglyLinkedList.SinglyLinkedList<Tuple<K, V>>> m_container;
-        int count = 0;
         public Hashtable(int size)
         {
             m_container = new ArrayList.ArrayList<SinglyLinkedList.SinglyLinkedList<Tuple<K, V>>>(size);
@@ -24,102 +20,104 @@ namespace Hashtable
 
         public void put(K key, V value)
         {
-            key.GetHashCode();
-            int index = key.GetHashCode() % m_container.Count();
-            if (m_container[index] == null)
+            int index = Math.Abs(key.GetHashCode() % m_container.Count());
+            var bucket = m_container[index];
+
+            for (int i = 0; i < bucket.Count(); i++)
             {
-                m_container[index] = new SinglyLinkedList.SinglyLinkedList<Tuple<K, V>>();
-            }
-            for (int i = 0; i < m_container[index].Count(); i++)
-            {
-                if (m_container[index].FindByIndex(i).Item1.Equals(key))
+                if (bucket.FindByIndex(i).Item1.Equals(key))
                 {
-                    m_container[index].Remove(m_container[index].FindByIndex(i));
-                    m_container[index].Add(new Tuple<K, V>(key, value));
-                    
+                    bucket.Remove(bucket.FindByIndex(i));
+                    bucket.Add(new Tuple<K, V>(key, value));
                     return;
                 }
-
-                m_container[index].Add(new Tuple<K, V>(key, value));
-                count++;
             }
-            if (LoadFactor() > 1.5)
+
+            bucket.Add(new Tuple<K, V>(key, value));
+            counter++;
+
+            if (LoadFactor() > 1.5f)
             {
                 Rehash();
             }
-
         }
 
         public bool get(K key, out V value)
         {
-            int index = key.GetHashCode() % m_container.Count();
-            for (int i = 0; i < m_container[index].Count(); i++)
+            int index = Math.Abs(key.GetHashCode() % m_container.Count());
+            var bucket = m_container[index];
+
+            for (int i = 0; i < bucket.Count(); i++)
             {
-                if (m_container[index].FindByIndex(i).Item1.Equals(key))
+                if (bucket.FindByIndex(i).Item1.Equals(key))
                 {
-                    value = m_container[index].FindByIndex(i).Item2;
+                    value = bucket.FindByIndex(i).Item2;
                     return true;
                 }
             }
+
             value = default;
             return false;
         }
 
         public bool Remove(K key)
         {
-            int index = key.GetHashCode() % m_container.Count();
-            for (int i = 0; i < m_container[index].Count(); i++)
-            {
-                if (m_container[index].FindByIndex(i).Item1.Equals(key))
-                {
-                    count--;
-                    return m_container[index].Remove(m_container[index].FindByIndex(i));
+            int index = Math.Abs(key.GetHashCode() % m_container.Count());
+            var bucket = m_container[index];
 
+            for (int i = 0; i < bucket.Count(); i++)
+            {
+                if (bucket.FindByIndex(i).Item1.Equals(key))
+                {
+                    counter--;
+                    return bucket.Remove(bucket.FindByIndex(i));
                 }
             }
+
             return false;
         }
+
         public bool ContainsKey(K key)
         {
-            int index = key.GetHashCode() % m_container.Count();
-            for (int i = 0; i < m_container[index].Count(); i++)
+            int index = Math.Abs(key.GetHashCode() % m_container.Count());
+            var bucket = m_container[index];
+
+            for (int i = 0; i < bucket.Count(); i++)
             {
-                if (m_container[index].FindByIndex(i).Item1.Equals(key))
+                if (bucket.FindByIndex(i).Item1.Equals(key))
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
-
         public float LoadFactor()
         {
-            return count / m_container.Count();
-
+            return (float)counter / m_container.Count();
         }
 
         private void Rehash()
         {
             int newSize = m_container.Count() * 2;
             var oldContainer = m_container;
-            m_container = new ArrayList.ArrayList<SinglyLinkedList.SinglyLinkedList<Tuple<K, V>>>(newSize);
 
-            // Neue Buckets initialisieren
+            m_container = new ArrayList.ArrayList<SinglyLinkedList.SinglyLinkedList<Tuple<K, V>>>(newSize);
             for (int i = 0; i < newSize; i++)
             {
-                m_container[i] = new SinglyLinkedList.SinglyLinkedList<Tuple<K, V>>();
+                m_container.Add(new SinglyLinkedList.SinglyLinkedList<Tuple<K, V>>());
             }
 
-            // Alle alten Werte neu einfügen
-            count = 0;
+            counter = 0;
             for (int i = 0; i < oldContainer.Count(); i++)
             {
-                if (oldContainer[i] != null)
+                var oldBucket = oldContainer[i];
+                if (oldBucket != null)
                 {
-                    for (int j = 0; j < oldContainer[i].Count(); j++)
+                    for (int j = 0; j < oldBucket.Count(); j++)
                     {
-                        var item = oldContainer[i].FindByIndex(j);
+                        var item = oldBucket.FindByIndex(j);
                         put(item.Item1, item.Item2);
                     }
                 }
@@ -127,4 +125,3 @@ namespace Hashtable
         }
     }
 }
-
